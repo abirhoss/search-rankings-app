@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Helpers\Response;
 
 use App\Helpers\Response\Response;
 use PHPUnit\Framework\TestCase;
@@ -15,10 +15,15 @@ final class ResponseTest extends TestCase
 		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../../test_config.yaml');
 	}
 
+	protected function setUp(): void
+	{
+		$this->fixturesPath = __DIR__ . '/../../fixtures';
+	}
+
 	public function testRenderView(): void
 	{
 		# Arrange
-		$viewPath = "{$this->fixturesPath}/html/form.html";
+		$viewPath = "{$this->fixturesPath}/html/generic_form.html";
 		$response = new Response($viewPath);
 
 		# Act
@@ -27,10 +32,5 @@ final class ResponseTest extends TestCase
 
 		# Assert
 		$this->assertEquals($expected, $actual);
-	}
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../../fixtures';
 	}
 }

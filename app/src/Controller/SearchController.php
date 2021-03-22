@@ -10,13 +10,15 @@ use App\SearchClients\GoogleSearchClient;
 /**
  * Class SearchController
  */
-class SearchController implements ControllerInterface
+class SearchController extends AbstractController
 {
-	private Response $response;
-
+	/**
+	 * SearchController constructor.
+	 * @param Response $response
+	 */
 	public function __construct(Response $response)
 	{
-		$this->response = $response;
+		parent::__construct($response);
 	}
 
 	/**
@@ -41,15 +43,18 @@ class SearchController implements ControllerInterface
 	{
 		// Sanitize search form input
 		$searchKeywords = Sanitizer::sanitizeText($searchFormInput['searchKeywords']);
-		$website = Sanitizer::sanitizeText($searchFormInput['website']);
-		$similarResults = isset($searchFormInput['similarResults']) ? $searchFormInput['similarResults'] : "off";
+		$url = Sanitizer::sanitizeText($searchFormInput['url']);
+		$omittedResults = isset($searchFormInput['omittedResults']) ? $searchFormInput['omittedResults'] : "No";
+
+		// Get the domain from the url
+		$domain = Sanitizer::getDomainFromUrl($url);
 
 		// Use Adapter $searchClient class to perform search and get rank positions
-		$searchResults = $searchClient->getSearchResults($searchKeywords, $similarResults);
-		$rankPositions = $searchClient->getRankPositionsFromSearchResults($searchResults, $website);
+		$searchResults = $searchClient->getSearchResults($searchKeywords, $omittedResults);
+		$rankPositions = $searchClient->getRankPositionsFromSearchResults($searchResults, $domain);
 
 		// Prepare response template variables
-		$responseVars = $this->prepareResponseVars($searchKeywords, $website, $similarResults, $rankPositions);
+		$responseVars = $this->prepareResponseVars($searchKeywords, $url, $domain, $omittedResults, $rankPositions);
 
 		// Return view template based on controller and action name
 		return $this->response->renderView($responseVars);
@@ -59,24 +64,25 @@ class SearchController implements ControllerInterface
 	 * Prepares variables for the view template
 	 *
 	 * @param string $searchKeywords
-	 * @param string $website
-	 * @param string $similarResults
+	 * @param string $domain
+	 * @param string $omittedResults
 	 * @param array $rankPositions
 	 * @return array
 	 */
-	private function prepareResponseVars(string $searchKeywords, string $website, string $similarResults, array $rankPositions): array
+	private function prepareResponseVars(string $searchKeywords, string $url, string $domain, string $omittedResults, array $rankPositions): array
 	{
-		$websiteCount = count($rankPositions);
+		$domainCount = count($rankPositions);
 		$rankingList = $this->convertRankArrayToCsv($rankPositions);
 		$resultsLimit = $GLOBALS['config']['search_params']['google']['limit'];
 
 		return [
 			'searchKeywords' => $searchKeywords,
-			'website' => $website,
+			'url' => $url,
+			'domain' => $domain,
 			'resultsLimit' => $resultsLimit,
-			'similarResults' => $similarResults,
+			'omittedResults' => $omittedResults,
 			'rankingList' => $rankingList,
-			'websiteCount' => $websiteCount
+			'domainCount' => $domainCount
 		];
 	}
 

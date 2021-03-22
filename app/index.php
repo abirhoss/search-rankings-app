@@ -2,13 +2,14 @@
 
 namespace App;
 
-use App\Controller\ControllerInterface;
+use App\Controller\AbstractController;
 use App\Helpers\Request\Http\CurlRequest;
 use App\Helpers\Request\Requests\RequestFactory;
 use App\Helpers\Response\Response;
 use App\SearchClients\GoogleApi;
 use App\SearchClients\GoogleSearchClient;
 use App\SearchClients\SearchClientInterface;
+use Exception;
 
 require_once 'vendor/autoload.php';
 
@@ -30,10 +31,10 @@ switch ($route) {
 		break;
 
     case '/':
-    default:
-        $controllerName = 'SearchController';
-        $actionName = 'searchFormAction';
-        break;
+	default:
+		$controllerName = 'SearchController';
+		$actionName = 'searchFormAction';
+		break;
 }
 
 // Get controller
@@ -49,6 +50,12 @@ $viewTemplate = $controller->{$actionName}($_POST, $searchClient);
 // Print HTML view template to user
 echo $viewTemplate;
 
+
+/**
+ * Returns the route from current request
+ *
+ * @return string
+ */
 function getRoute(): string
 {
 	// If there is an 'action' url parameter in the request, return it's value
@@ -61,7 +68,15 @@ function getRoute(): string
 	return $_SERVER['REQUEST_URI'];
 }
 
-function getController(string $controllerName, string $actionName): ControllerInterface
+
+/**
+ * Instantiates and returns a Controller object
+ *
+ * @param string $controllerName
+ * @param string $actionName
+ * @return AbstractController
+ */
+function getController(string $controllerName, string $actionName): AbstractController
 {
 	// Instantiate Response object and inject into controller as a dependency
 	$viewPath = getViewPath($controllerName, $actionName);
@@ -72,6 +87,14 @@ function getController(string $controllerName, string $actionName): ControllerIn
 	return new $qualifiedControllerName($response);
 }
 
+
+/**
+ * Returns a SearchClient based on the search engine
+ *
+ * @param string $searchEngine
+ * @return SearchClientInterface|null
+ * @throws Exception
+ */
 function getSearchClient(string $searchEngine): ?SearchClientInterface
 {
 	switch ($searchEngine) {
@@ -92,6 +115,12 @@ function getSearchClient(string $searchEngine): ?SearchClientInterface
 	}
 }
 
+
+/**
+ * @param string $controllerName
+ * @param string $actionName
+ * @return string
+ */
 function getViewPath(string $controllerName, string $actionName): string
 {
 	// extract controller name
@@ -105,6 +134,11 @@ function getViewPath(string $controllerName, string $actionName): string
 	return "{$viewRootDir}/{$controllerName}/{$actionName}.template.php";
 }
 
+
+/**
+ * @param string $searchEngine
+ * @return array
+ */
 function getSearchApiConfig(string $searchEngine): array
 {
 	$apiScheme = $GLOBALS['config']['search_params'][$searchEngine]['scheme'];

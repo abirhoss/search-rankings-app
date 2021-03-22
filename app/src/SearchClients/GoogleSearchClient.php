@@ -3,6 +3,7 @@
 namespace App\SearchClients;
 
 
+
 /**
  * An Adapter class that's compatible with the Target interface and wraps around an Adaptee class.
  *
@@ -22,19 +23,17 @@ class GoogleSearchClient implements SearchClientInterface
 		$this->google = $google;
 	}
 
-
 	/**
 	 * Wrapper function that makes a google search
 	 *
 	 * @param string $searchKeywords
-	 * @param ?string $similarResults
+	 * @param ?string $omittedResults
 	 * @return array
-	 * @throws Exception
 	 */
-	public function getSearchResults(string $searchKeywords, ?string $similarResults): array
+	public function getSearchResults(string $searchKeywords, ?string $omittedResults): array
 	{
 		// Get the google search parameters
-		$searchParameters = $this->getGoogleSearchParameters($searchKeywords, $similarResults);
+		$searchParameters = $this->getGoogleSearchParameters($searchKeywords, $omittedResults);
 
 		// Get google search results
 		return $this->google->getGoogleApiSearchResults($searchParameters);
@@ -44,14 +43,14 @@ class GoogleSearchClient implements SearchClientInterface
 	 * Builds parameters for a google search
 	 *
 	 * @param string $searchKeywords
-	 * @param ?string $similarResults
+	 * @param ?string $omittedResults
 	 * @return array
 	 */
-	private function getGoogleSearchParameters(string $searchKeywords, ?string $similarResults): array
+	private function getGoogleSearchParameters(string $searchKeywords, ?string $omittedResults): array
 	{
 		// Get google search params
 		$searchParams = $GLOBALS['config']['search_params']['google'];
-		$includeSimilarResults = $similarResults == "on" ? "0" : "1";
+		$includeOmittedResults = $omittedResults == "on" ? "0" : "1";
 
 		return [
 			'q' => $searchKeywords,
@@ -61,29 +60,31 @@ class GoogleSearchClient implements SearchClientInterface
 			'gl' => $searchParams['country'],
 			'hl' => $searchParams['language'],
 			'num' => $searchParams['limit'],
-			'filter' => $includeSimilarResults
+			'filter' => $includeOmittedResults
 		];
 	}
 
 	/**
-	 * Searches through the search results and returns the positions of wherever the target website is found
+	 * Searches through the search results and returns the positions of wherever the domain is found
 	 *
 	 * @param array $searchResults
-	 * @param string $website
+	 * @param string $domain
 	 * @return array
 	 */
-	public function getRankPositionsFromSearchResults(array $searchResults, string $website): array
+	public function getRankPositionsFromSearchResults(array $searchResults, string $domain): array
 	{
 		$rankPositions = [];
 
 		foreach ($searchResults['organic_results'] as $result) {
-			// Check if result website contains our target website string
-			$websiteFoundInResult = strpos($result['link'], $website);
+			// Check if result link contains our target domain string
+			$domainFoundInResult = strpos($result['link'], $domain);
 
-			if ($websiteFoundInResult === false) {
+			// Continue to next search result if domain is not found in result link
+			if ($domainFoundInResult === false) {
 				continue;
 			}
 
+			// Add result position to $rankPositions
 			$rankPositions[] = $result['position'];
 		}
 

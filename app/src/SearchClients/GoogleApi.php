@@ -32,7 +32,6 @@ class GoogleApi
 	/**
 	 * @param array $searchParameters
 	 * @return array
-	 * @throws Exception
 	 */
 	public function getGoogleApiSearchResults(array $searchParameters): array
 	{

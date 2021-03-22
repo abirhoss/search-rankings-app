@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Helpers\Request\Http;
 
 
 use App\Helpers\Request\Http\CurlRequest;

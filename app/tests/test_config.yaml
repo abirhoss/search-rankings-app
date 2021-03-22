@@ -13,4 +13,4 @@ search_params:
     country: 'au'
     language: 'en'
     limit: '100'
-    filter_similar_results: '1'
+    include_omitted_results: '1'

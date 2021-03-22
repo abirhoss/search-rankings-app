@@ -29,6 +29,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin: 5rem 0;
 }
 h1{
+	font-size: 60px;
 	line-height: 40px;
 	font-weight: 600;
 	color:#4c5357;
@@ -68,7 +69,34 @@ h3{
 	margin-top: 0px !important;
 	margin-bottom: 0px !important;
 }
-@media screen and (max-width:480px){
-	h1{ font-size: 26px; }
-	h2{ font-size: 20px; }
+
+label {
+	font-size: 2em;
 }
+
+input.form-control {
+	font-size: 22px;
+}
+
+h1.rankings {
+	font-size: 40px;
+}
+
+.btn-lg {
+	font-size: 2em;
+}
+
+input[type=checkbox]
+{
+	/* Double-sized Checkboxes */
+	-ms-transform: scale(2.5); /* IE */
+	-moz-transform: scale(2.5); /* FF */
+	-webkit-transform: scale(2.5); /* Safari and Chrome */
+	-o-transform: scale(2.5); /* Opera */
+	padding: 10px;
+}
+
+/*@media screen and (max-width:480px){*/
+/*	h1{ font-size: 26px; }*/
+/*	h2{ font-size: 20px; }*/
+/*}*/

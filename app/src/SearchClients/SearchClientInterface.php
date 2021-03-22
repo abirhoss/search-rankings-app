@@ -10,7 +10,17 @@ namespace App\SearchClients;
  */
 interface SearchClientInterface
 {
-	public function getSearchResults(string $searchKeywords, string $similarResults): array;
+	/**
+	 * @param string $searchKeywords
+	 * @param string $omittedResults
+	 * @return array
+	 */
+	public function getSearchResults(string $searchKeywords, string $omittedResults): array;
 
-	public function getRankPositionsFromSearchResults(array $searchResults, string $website): array;
+	/**
+	 * @param array $searchResults
+	 * @param string $domain
+	 * @return array
+	 */
+	public function getRankPositionsFromSearchResults(array $searchResults, string $domain): array;
 }

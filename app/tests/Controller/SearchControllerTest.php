@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
 use App\Controller\SearchController;
 use App\Helpers\Request\GetRequest;
@@ -17,6 +17,12 @@ final class SearchControllerTest extends TestCase
 	public static function setUpBeforeClass(): void
 	{
 		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../test_config.yaml');
+	}
+
+	protected function setUp(): void
+	{
+		$this->fixturesPath = __DIR__ . '/../fixtures';
+		$this->viewRootDir = $GLOBALS['config']['app_root'] . '/src/View/';
 	}
 
 	public function testSearchFormAction(): void
@@ -46,7 +52,7 @@ final class SearchControllerTest extends TestCase
 		$response = new Response($actualViewPath);
 
 		$searchFormInput['searchKeywords'] = 'creditorwatch';
-		$searchFormInput['website'] = 'creditorwatch.com.au';
+		$searchFormInput['url'] = 'creditorwatch.com.au';
 		$rankPositions = array(1);
 
 		// mock GoogleSearchClient
@@ -66,11 +72,5 @@ final class SearchControllerTest extends TestCase
 
 		# Assert
 		$this->assertEquals($expectedView, $actualView);
-	}
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../fixtures';
-		$this->viewRootDir = $GLOBALS['config']['app_root'] . '/src/View/';
 	}
 }

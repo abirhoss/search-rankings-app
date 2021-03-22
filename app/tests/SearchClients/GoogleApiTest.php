@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\SearchClients;
 
 use App\Helpers\Request\Requests\GetRequest;
 use App\SearchClients\GoogleApi;
@@ -10,13 +10,6 @@ use function PHPUnit\Framework\assertEquals;
 
 final class GoogleApiTest extends TestCase
 {
-	private string $fixturesPath;
-
-	public static function setUpBeforeClass(): void
-	{
-		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../test_config.yaml');
-	}
-
 	public function testGetGoogleApiSearchResults(): void
 	{
 		# Arrange
@@ -44,10 +37,5 @@ final class GoogleApiTest extends TestCase
 
 		# Assert
 		assertEquals($expectedResults, $actualResults);
-	}
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../fixtures';
 	}
 }

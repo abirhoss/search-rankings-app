@@ -18,37 +18,35 @@
 				This app performs a Google search at google.com.au with the provided search keywords
 			</h2><br>
 			<h3>
-				The search results are then processed to return a list of numbers where the target website URL is found in the Google results
+				The search results are then processed to return a list of numbers where the target URL's domain is found in the Google results
 			</h3>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-4 mx-auto">
-			<div class="myform form ">
-				<!-- search form -->
-				<form action='/?action=search_query' method='post'>
-					<!-- search keywords field -->
-					<div class="form-group">
-						<label for="searchKeywords">Search Keywords</label>
-						<input type="text" size="50" class="form-control" id="searchKeywords" name="searchKeywords" aria-describedby="searchKeywordsHelp" placeholder="creditorwatch" required>
-					</div><br>
+	<div class="col-md-10 mx-auto jumbotron">
+		<div class="search-form form ">
+			<!-- search form -->
+			<form action='/?action=search_query' method='post'>
+				<!-- search keywords field -->
+				<div class="form-inline form-group">
+					<label class="mr-2" for="searchKeywords"><b>Search Keywords: </b></label>
+					<input type="text" size="40" class="form-control" id="searchKeywords" name="searchKeywords" aria-describedby="searchKeywordsHelp" placeholder="creditorwatch" required>
+				</div>
 
-					<!-- target website field -->
-					<div class="form-group">
-						<label for="website">Target Website</label>
-						<input type="text" size="30" pattern=".*\.com.*" class="form-control" id="website" name="website" placeholder="creditorwatch.com.au" required>
-					</div><br>
+				<!-- target url field -->
+				<div class="form-inline form-group">
+					<label class="mr-2" for="url"><b>Target URL: </b></label>
+					<input type="text" size="40" pattern=".*\.com.*" class="form-control" id="url" name="url" placeholder="creditorwatch.com.au" required>
+				</div>
 
-					<!-- similar results field -->
-					<div class="form-group form-check">
-						<input type="checkbox" class="form-check-input" id="similarResults" name="similarResults">
-						<label class="form-check-label" for="exampleCheck1">Include similar results</label>
-					</div>
+				<!-- omitted results field -->
+				<div class="form-inline form-group form-check">
+					<input type="checkbox" class="mr-4 form-check-input" id="omittedResults" name="omittedResults">
+					<label class="form-check-label" for="omittedResults">Include omitted results</label>
+				</div>
 
-					<!-- form submit button -->
-					<input type="submit" class="btn btn-primary btn-lg" value='Submit'>
-				</form>
-			</div>
+				<!-- form submit button -->
+				<input type="submit" class="btn btn-primary btn-lg btn-block col-md-6 mx-auto" value='Search'>
+			</form>
 		</div>
 	</div>
 </div>

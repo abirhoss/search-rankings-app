@@ -1,4 +1,4 @@
-### A PHP app that allows users to perform a Google search and get the rank psitions of a website
+### A PHP app that allows users to perform a Google search and get the rank positions of a website
 
 Visit https://search.abirhossain.com.au to see demo
 

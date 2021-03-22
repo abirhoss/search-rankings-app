@@ -14,7 +14,7 @@ Visit https://search.abirhossain.com.au to see demo
 
 ### Logic
 
-The app extracts the domain (e.g. `creditorwatch.com.au`) from a given URL (e.g. `https://www.creditorwatch.com.au`) and then uses that domain to do a `contains` searches against the search result links
+The app extracts the domain (e.g. `creditorwatch.com.au`) from a given URL (e.g. `https://www.creditorwatch.com.au`) and then uses that domain to do a `contains` search against the search result links
 
 This allows us to get the rank positions of all pages within a domain (e.g. `https://www.creditorwatch.com.au/about`) that show up in the search results
 
@@ -37,8 +37,11 @@ You will need the following applications installed before starting:
 ## Quick Start
 
 ```
+# Clone the repository
+git clone git@github.com:abirhoss/search-rankings-app.git
+
 # Change directory to the repository
-cd search-rankings-api
+cd search-rankings-app
 
 # Copy the environments file and edit your variables accordingly
 cp .env.dist .env
@@ -52,11 +55,12 @@ After both the `php` and `webserver` containers start, the app should be running
 The `app` directory will be mounted within the `/app` directory within the container.
 This means any files created/edited from either the host machine or container will be reflected in both realtime.
 
-If you want to run this app directly on your machine, you will need the following system packages installed:
+If you want to run this app directly on your machine, you will need the following installed:
 
 ```
-1. libyaml
-2. PHP yaml extension (pecl install yaml)
+1. PHP 7.4
+2. libyaml
+3. PHP yaml extension (pecl install yaml)
 ```
 
 ---

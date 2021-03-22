@@ -1,0 +1,16 @@
+app_root: /app
+
+# search parameters
+search_params:
+  google:
+    api_key: 'a38d7be903a5fcb00606f7f9cc32495e899ff2ba02bab55d1fdd978ad1268fa9'
+    scheme: 'https'
+    host: 'serpapi.com'
+    basepath: 'search.json'
+    search_engine: 'google'
+    google_domain: 'google.com.au'
+    location: 'Australia'
+    country: 'au'
+    language: 'en'
+    limit: '100'
+    filter_similar_results: '1'

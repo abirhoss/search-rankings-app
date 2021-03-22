@@ -126,7 +126,7 @@ Due to time-constraints a number of shortcuts were taken. Here are the things I 
 
 ### 1. Error Handling and Edge cases
 
-The code was written based on a happy-path assumption that valid function arguments and return values are valid.
+The code was written based on a happy-path assumption that function arguments and return values will be valid.
 
 It assumes that a user will visit the homepage form and enter valid input
 

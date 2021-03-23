@@ -37,10 +37,10 @@
 					<input type="text" size="40" pattern=".*\.com.*" class="form-control" id="url" name="url" placeholder="creditorwatch.com.au" required>
 				</div>
 
-				<!-- omitted results field -->
+				<!-- include omitted results field -->
 				<div class="form-inline form-group form-check">
-					<input type="checkbox" class="mr-4 form-check-input" id="omittedResults" name="omittedResults">
-					<label class="form-check-label" for="omittedResults">Include omitted results</label>
+					<input type="checkbox" class="mr-4 form-check-input" id="includeOmittedResults" name="includeOmittedResults">
+					<label class="form-check-label" for="includeOmittedResults">Include omitted results</label>
 				</div>
 
 				<!-- form submit button -->

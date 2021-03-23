@@ -12,10 +12,10 @@ interface SearchClientInterface
 {
 	/**
 	 * @param string $searchKeywords
-	 * @param string $omittedResults
+	 * @param bool $includeOmittedResults
 	 * @return array
 	 */
-	public function getSearchResults(string $searchKeywords, string $omittedResults): array;
+	public function getSearchResults(string $searchKeywords, bool $includeOmittedResults): array;
 
 	/**
 	 * @param array $searchResults

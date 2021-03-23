@@ -34,10 +34,10 @@ final class GoogleSearchClientTest extends BaseTest
 		# Arrange
 		$expectedResults = ["key" => "dummy api response"];
 		$searchKeywords = 'dummy search keyword';
-		$omittedResults = 'off';
+		$includeOmittedResults = false;
 
 		# Act
-		$actualResults = $this->googleSearchClient->getSearchResults($searchKeywords, $omittedResults);
+		$actualResults = $this->googleSearchClient->getSearchResults($searchKeywords, $includeOmittedResults);
 
 		# Assert
 		$this->assertEquals($expectedResults, $actualResults);

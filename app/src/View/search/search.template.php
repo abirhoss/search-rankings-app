@@ -24,7 +24,7 @@
 			<h2>Target Domain: "<?= $vars['domain'] ?>"</h2><br>
 			<h2>Target Domain Count: "<?= $vars['domainCount'] ?>"</h2><br>
 			<h2>Results Limit: "<?= $vars['resultsLimit'] ?>"</h2><br>
-			<h2>Include Omitted Results: "<?= $vars['omittedResults'] ?>"</h2>
+			<h2>Include Omitted Results: "<?= $vars['includeOmittedResults'] ?>"</h2>
 		</div>
 	</div>
 	<div class="row mb-5">

@@ -46,17 +46,17 @@ class SearchController extends AbstractController
 		// Get form input values
 		$searchKeywords = $searchFormInput['searchKeywords'];
 		$url = $searchFormInput['url'];
-		$omittedResults = isset($searchFormInput['omittedResults']) ? $searchFormInput['omittedResults'] : "No";
+		$includeOmittedResults = isset($searchFormInput['includeOmittedResults']);
 
 		// Get the domain from the url
 		$domain = Sanitizer::getDomainFromUrl($url);
 
 		// Use Adapter $searchClient class to perform search and get rank positions
-		$searchResults = $searchClient->getSearchResults($searchKeywords, $omittedResults);
+		$searchResults = $searchClient->getSearchResults($searchKeywords, $includeOmittedResults);
 		$rankPositions = $searchClient->getRankPositionsFromSearchResults($searchResults, $domain);
 
 		// Prepare response template variables
-		$responseVars = $this->prepareResponseVars($searchKeywords, $url, $domain, $omittedResults, $rankPositions);
+		$responseVars = $this->prepareResponseVars($searchKeywords, $url, $domain, $includeOmittedResults, $rankPositions);
 
 		// Return view template based on controller and action name
 		return $this->response->renderView($responseVars);
@@ -68,22 +68,23 @@ class SearchController extends AbstractController
 	 * @param string $searchKeywords
 	 * @param string $url
 	 * @param string $domain
-	 * @param string $omittedResults
+	 * @param bool $includeOmittedResults
 	 * @param array $rankPositions
 	 * @return array
 	 */
-	private function prepareResponseVars(string $searchKeywords, string $url, string $domain, string $omittedResults, array $rankPositions): array
+	private function prepareResponseVars(string $searchKeywords, string $url, string $domain, bool $includeOmittedResults, array $rankPositions): array
 	{
 		$domainCount = count($rankPositions);
 		$rankingList = $this->convertRankArrayToCsv($rankPositions);
 		$resultsLimit = $this->parameterStore->getParameter('search_config')['google']['limit'];
+		$includeOmittedResults = $includeOmittedResults ? "Yes" : "No";
 
 		return [
 			'searchKeywords' => $searchKeywords,
 			'url' => $url,
 			'domain' => $domain,
 			'resultsLimit' => $resultsLimit,
-			'omittedResults' => $omittedResults,
+			'includeOmittedResults' => $includeOmittedResults,
 			'rankingList' => $rankingList,
 			'domainCount' => $domainCount
 		];

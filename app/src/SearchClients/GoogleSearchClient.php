@@ -31,13 +31,13 @@ class GoogleSearchClient implements SearchClientInterface
 	 * Wrapper function that makes a google search
 	 *
 	 * @param string $searchKeywords
-	 * @param ?string $omittedResults
+	 * @param bool $includeOmittedResults
 	 * @return array
 	 */
-	public function getSearchResults(string $searchKeywords, ?string $omittedResults): array
+	public function getSearchResults(string $searchKeywords, bool $includeOmittedResults): array
 	{
 		// Get the google search parameters
-		$searchParameters = $this->getGoogleSearchParameters($searchKeywords, $omittedResults);
+		$searchParameters = $this->getGoogleSearchParameters($searchKeywords, $includeOmittedResults);
 
 		// Get google search results
 		return $this->google->getGoogleApiSearchResults($searchParameters);
@@ -47,14 +47,14 @@ class GoogleSearchClient implements SearchClientInterface
 	 * Builds parameters for a google search
 	 *
 	 * @param string $searchKeywords
-	 * @param ?string $omittedResults
+	 * @param bool $includeOmittedResults
 	 * @return array
 	 */
-	private function getGoogleSearchParameters(string $searchKeywords, ?string $omittedResults): array
+	private function getGoogleSearchParameters(string $searchKeywords, bool $includeOmittedResults): array
 	{
 		// Get google search params
 		$googleSearchConfig = $this->parameterStore->getParameter('search_config')['google'];
-		$includeOmittedResults = $omittedResults == "on" ? "0" : "1";
+		$filterOmittedResults = $includeOmittedResults ? "0" : "1";
 
 		return [
 			'q' => $searchKeywords,
@@ -64,7 +64,7 @@ class GoogleSearchClient implements SearchClientInterface
 			'gl' => $googleSearchConfig['country'],
 			'hl' => $googleSearchConfig['language'],
 			'num' => $googleSearchConfig['limit'],
-			'filter' => $includeOmittedResults
+			'filter' => $filterOmittedResults
 		];
 	}
 

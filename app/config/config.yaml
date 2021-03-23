@@ -13,4 +13,3 @@ search_config:
     country: 'au'
     language: 'en'
     limit: '100'
-    include_omitted_results: '1'

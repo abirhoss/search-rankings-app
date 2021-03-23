@@ -152,7 +152,7 @@ I would write Terraform code to define all the resources I want to provision. Th
 
 ### 6. Use a framework and environment variables
 
-I would use a framework like Symfony and environment variables rather than passing around a global object to bootstrap app config
+I would use a framework like Symfony and environment variables to store config in the environment
 
 ---
 

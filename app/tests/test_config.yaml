@@ -1,7 +1,7 @@
 app_root: /app
 
-# search parameters
-search_params:
+# search config
+search_config:
   google:
     api_key: 'dummy_api_key'
     scheme: 'https'

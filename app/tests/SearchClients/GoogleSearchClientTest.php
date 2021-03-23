@@ -4,22 +4,16 @@ namespace App\Tests\SearchClients;
 
 use App\SearchClients\GoogleApi;
 use App\SearchClients\GoogleSearchClient;
-use PHPUnit\Framework\TestCase;
+use BaseTest;
 
 
-final class GoogleSearchClientTest extends TestCase
+final class GoogleSearchClientTest extends BaseTest
 {
-	private string $fixturesPath;
 	private GoogleSearchClient $googleSearchClient;
-
-	public static function setUpBeforeClass(): void
-	{
-		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../test_config.yaml');
-	}
 
 	protected function setUp(): void
 	{
-		$this->fixturesPath = __DIR__ . '/../fixtures';
+		parent::setUp();
 
 		// Set up a mock GoogleApi object
 		$mockGoogleApi = $this->getMockBuilder(GoogleApi::class)
@@ -32,7 +26,7 @@ final class GoogleSearchClientTest extends TestCase
 			->willReturn($expectedResults);
 
 		// Instantiate GoogleSearchClient using mockGoogleApi
-		$this->googleSearchClient = new GoogleSearchClient($mockGoogleApi);
+		$this->googleSearchClient = new GoogleSearchClient($mockGoogleApi, $this->parameterStore);
 	}
 
 	public function testGetSearchResults(): void

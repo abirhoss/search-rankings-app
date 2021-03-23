@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Controller\AbstractController;
+use App\Helpers\ParameterStore;
 use App\Helpers\Request\Http\CurlRequest;
 use App\Helpers\Request\Requests\RequestFactory;
 use App\Helpers\Response\Response;
@@ -17,9 +18,6 @@ require_once 'vendor/autoload.php';
 /**
  * This is the application entrypoint
  */
-
-// Load application config and provide it globally
-$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/config/config.yaml');
 
 // Get route from request
 $route = getRoute();
@@ -38,20 +36,24 @@ switch ($route) {
 		break;
 }
 
-// Get controller
-$controller = getController($controllerName, $actionName);
+// Prepare arguments to be passed to the controller
+$parameters = yaml_parse_file(__DIR__ . '/config/config.yaml');
+$parameterStore = new ParameterStore($parameters);
+$response = new Response(getViewPath($controllerName, $actionName));
 
-// Get search client
-$searchClient = getSearchClient('google');
+// Instantiate the appropriate controller
+$controller = createController($controllerName, $response, $parameterStore);
 
-// Get sanitized $_POST input
+// Prepare search engine config and instantiate the appropriate search client
+$searchEngineName = 'google';
+$searchApiConfig = buildSearchApiConfig($searchEngineName, $parameterStore);
+$searchClient = createSearchClient($searchEngineName, $searchApiConfig, $parameterStore);
+
+// Sanitize the $_POST input and call the appropriate controller action
 $sanitizedPostInput = Sanitizer::sanitizeTextArray($_POST);
-
-// Call the appropriate controller action. Inject search client into controller as a dependency.
-// The controller returns a rendered view template in HTML
 $viewTemplate = $controller->{$actionName}($sanitizedPostInput, $searchClient);
 
-// Print HTML view template to user
+// The controller returns a rendered view template in HTML, print this HTML view template to user
 echo $viewTemplate;
 
 
@@ -77,46 +79,15 @@ function getRoute(): string
  * Instantiates and returns a Controller object
  *
  * @param string $controllerName
- * @param string $actionName
+ * @param ParameterStore $parameterStore
+ * @param Response $response
  * @return AbstractController
  */
-function getController(string $controllerName, string $actionName): AbstractController
+function createController(string $controllerName, Response $response, ParameterStore $parameterStore): AbstractController
 {
-	// Instantiate Response object and inject into controller as a dependency
-	$viewPath = getViewPath($controllerName, $actionName);
-	$response = new Response($viewPath);
-
 	// Instantiate appropriate controller based on $controllerName
 	$qualifiedControllerName = "App\\Controller\\{$controllerName}";
-	return new $qualifiedControllerName($response);
-}
-
-
-/**
- * Returns a SearchClient based on the search engine
- *
- * @param string $searchEngine
- * @return SearchClientInterface|null
- * @throws Exception
- */
-function getSearchClient(string $searchEngine): ?SearchClientInterface
-{
-	switch ($searchEngine) {
-		case 'google':
-			// Prepare search api config
-			$searchApiConfig = getSearchApiConfig($searchEngine);
-
-			// Instantiate GoogleApi Adaptee class
-			$http = new CurlRequest();
-			$requestClient = RequestFactory::create('GET', $searchApiConfig['apiEndpoint'], $http);
-			$googleApi = new GoogleApi($searchApiConfig['apiKey'], $requestClient);
-
-			// Instantiate GoogleSearchClient Adapter class that wraps the GoogleApi Adaptee
-			return new GoogleSearchClient($googleApi);
-
-		default:
-			return null;
-	}
+	return new $qualifiedControllerName($response, $parameterStore);
 }
 
 
@@ -140,15 +111,18 @@ function getViewPath(string $controllerName, string $actionName): string
 
 
 /**
- * @param string $searchEngine
+ * @param string $searchEngineName
+ * @param ParameterStore $parameterStore
  * @return array
  */
-function getSearchApiConfig(string $searchEngine): array
+function buildSearchApiConfig(string $searchEngineName, ParameterStore $parameterStore): array
 {
-	$apiScheme = $GLOBALS['config']['search_params'][$searchEngine]['scheme'];
-	$apiHost = $GLOBALS['config']['search_params'][$searchEngine]['host'];
-	$apiBasePath = $GLOBALS['config']['search_params'][$searchEngine]['basepath'];
-	$apiKey = $GLOBALS['config']['search_params'][$searchEngine]['api_key'];
+	$searchConfig = $parameterStore->getParameter('search_config');
+
+	$apiScheme = $searchConfig[$searchEngineName]['scheme'];
+	$apiHost = $searchConfig[$searchEngineName]['host'];
+	$apiBasePath = $searchConfig[$searchEngineName]['basepath'];
+	$apiKey = $searchConfig[$searchEngineName]['api_key'];
 	$apiEndpoint = $apiScheme . '://'. $apiHost . '/' . $apiBasePath;
 
 	return [
@@ -158,4 +132,31 @@ function getSearchApiConfig(string $searchEngine): array
 		'apiEndpoint' => $apiEndpoint,
 		'apiKey' => $apiKey
 	];
+}
+
+
+/**
+ * Returns a SearchClient based on the search engine
+ *
+ * @param string $searchEngineName
+ * @param array $searchApiConfig
+ * @param ParameterStore $parameterStore
+ * @return SearchClientInterface|null
+ * @throws Exception
+ */
+function createSearchClient(string $searchEngineName, array $searchApiConfig, ParameterStore $parameterStore): ?SearchClientInterface
+{
+	switch ($searchEngineName) {
+		case 'google':
+			// Instantiate GoogleApi Adaptee class
+			$http = new CurlRequest();
+			$requestClient = RequestFactory::create('GET', $searchApiConfig['apiEndpoint'], $http);
+			$googleApi = new GoogleApi($searchApiConfig['apiKey'], $requestClient);
+
+			// Instantiate GoogleSearchClient Adapter class that wraps the GoogleApi Adaptee
+			return new GoogleSearchClient($googleApi, $parameterStore);
+
+		default:
+			return null;
+	}
 }

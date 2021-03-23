@@ -3,22 +3,11 @@
 namespace App\Tests\Helpers\Response;
 
 use App\Helpers\Response\Response;
-use PHPUnit\Framework\TestCase;
+use BaseTest;
 
 
-final class ResponseTest extends TestCase
+final class ResponseTest extends BaseTest
 {
-	private string $fixturesPath;
-
-	public static function setUpBeforeClass(): void
-	{
-		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../../test_config.yaml');
-	}
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../../fixtures';
-	}
 
 	public function testRenderView(): void
 	{

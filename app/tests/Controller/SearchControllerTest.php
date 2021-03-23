@@ -3,39 +3,24 @@
 namespace App\Tests\Controller;
 
 use App\Controller\SearchController;
-use App\Helpers\Request\GetRequest;
-use App\Helpers\Request\RequestFactory;
 use App\Helpers\Response\Response;
 use App\SearchClients\GoogleSearchClient;
-use PHPUnit\Framework\TestCase;
+use BaseTest;
 
-final class SearchControllerTest extends TestCase
+final class SearchControllerTest extends BaseTest
 {
-	private string $fixturesPath;
-	private string $viewRootDir;
-
-	public static function setUpBeforeClass(): void
-	{
-		$GLOBALS['config'] = yaml_parse_file(__DIR__ . '/../test_config.yaml');
-	}
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../fixtures';
-		$this->viewRootDir = $GLOBALS['config']['app_root'] . '/src/View/';
-	}
-
 	public function testSearchFormAction(): void
 	{
 		# Arrange
 		$expectedViewPath = "{$this->fixturesPath}/html/search_form.html";
-		$actualViewPath = "{$this->viewRootDir}/search/searchform.template.php";
+		$appRootPath = $this->parameterStore->getParameter('app_root');
+		$actualViewPath = "{$appRootPath}/src/View/search/searchform.template.php";
 
 		$expectedView = file_get_contents($expectedViewPath);
 		$response = new Response($actualViewPath);
 
 		# Act
-		$searchController = new SearchController($response);
+		$searchController = new SearchController($response, $this->parameterStore);
 		$actualView = $searchController->searchFormAction();
 
 		# Assert
@@ -46,7 +31,8 @@ final class SearchControllerTest extends TestCase
 	{
 		# Arrange
 		$expectedViewPath = "{$this->fixturesPath}/html/search_rankings.html";
-		$actualViewPath = "{$this->viewRootDir}/search/search.template.php";
+		$appRootPath = $this->parameterStore->getParameter('app_root');
+		$actualViewPath = "{$appRootPath}/src/View/search/search.template.php";
 
 		$expectedView = file_get_contents($expectedViewPath);
 		$response = new Response($actualViewPath);
@@ -67,7 +53,7 @@ final class SearchControllerTest extends TestCase
 			->willReturn($rankPositions);
 
 		# Act
-		$searchController = new SearchController($response);
+		$searchController = new SearchController($response, $this->parameterStore);
 		$actualView = $searchController->searchAction($searchFormInput, $mockGoogleSearchSearchClient);
 
 		# Assert

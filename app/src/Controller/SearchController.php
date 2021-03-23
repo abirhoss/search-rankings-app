@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Helpers\ParameterStore;
 use App\Helpers\Response\Response;
 use App\Helpers\Sanitizer;
 use App\SearchClients\GoogleSearchClient;
@@ -15,10 +16,11 @@ class SearchController extends AbstractController
 	/**
 	 * SearchController constructor.
 	 * @param Response $response
+	 * @param ParameterStore $parameterStore
 	 */
-	public function __construct(Response $response)
+	public function __construct(Response $response, ParameterStore $parameterStore)
 	{
-		parent::__construct($response);
+		parent::__construct($response, $parameterStore);
 	}
 
 	/**
@@ -64,6 +66,7 @@ class SearchController extends AbstractController
 	 * Prepares variables for the view template
 	 *
 	 * @param string $searchKeywords
+	 * @param string $url
 	 * @param string $domain
 	 * @param string $omittedResults
 	 * @param array $rankPositions
@@ -73,7 +76,7 @@ class SearchController extends AbstractController
 	{
 		$domainCount = count($rankPositions);
 		$rankingList = $this->convertRankArrayToCsv($rankPositions);
-		$resultsLimit = $GLOBALS['config']['search_params']['google']['limit'];
+		$resultsLimit = $this->parameterStore->getParameter('search_config')['google']['limit'];
 
 		return [
 			'searchKeywords' => $searchKeywords,

@@ -3,6 +3,7 @@
 namespace App\SearchClients;
 
 
+use App\Helpers\ParameterStore;
 
 /**
  * An Adapter class that's compatible with the Target interface and wraps around an Adaptee class.
@@ -13,14 +14,17 @@ class GoogleSearchClient implements SearchClientInterface
 {
 
 	private GoogleApi $google;
+	protected ParameterStore $parameterStore;
 
 	/**
 	 * GoogleSearchClient constructor.
 	 * @param GoogleApi $google
+	 * @param ParameterStore $parameterStore
 	 */
-	public function __construct(GoogleApi $google)
+	public function __construct(GoogleApi $google, ParameterStore $parameterStore)
 	{
 		$this->google = $google;
+		$this->parameterStore = $parameterStore;
 	}
 
 	/**
@@ -49,17 +53,17 @@ class GoogleSearchClient implements SearchClientInterface
 	private function getGoogleSearchParameters(string $searchKeywords, ?string $omittedResults): array
 	{
 		// Get google search params
-		$searchParams = $GLOBALS['config']['search_params']['google'];
+		$googleSearchConfig = $this->parameterStore->getParameter('search_config')['google'];
 		$includeOmittedResults = $omittedResults == "on" ? "0" : "1";
 
 		return [
 			'q' => $searchKeywords,
-			'engine' => $searchParams['search_engine'],
-			'google_domain' => $searchParams['google_domain'],
-			'location' => $searchParams['location'],
-			'gl' => $searchParams['country'],
-			'hl' => $searchParams['language'],
-			'num' => $searchParams['limit'],
+			'engine' => $googleSearchConfig['search_engine'],
+			'google_domain' => $googleSearchConfig['google_domain'],
+			'location' => $googleSearchConfig['location'],
+			'gl' => $googleSearchConfig['country'],
+			'hl' => $googleSearchConfig['language'],
+			'num' => $googleSearchConfig['limit'],
 			'filter' => $includeOmittedResults
 		];
 	}

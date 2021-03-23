@@ -1,7 +1,7 @@
 app_root: /app
 
 # search parameters
-search_params:
+search_config:
   google:
     api_key: 'a38d7be903a5fcb00606f7f9cc32495e899ff2ba02bab55d1fdd978ad1268fa9'
     scheme: 'https'

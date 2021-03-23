@@ -4,18 +4,11 @@ namespace App\Tests\Helpers;
 
 
 use App\Helpers\Sanitizer;
-use PHPUnit\Framework\TestCase;
+use BaseTest;
 
 
-final class SanitizerTest extends TestCase
+final class SanitizerTest extends BaseTest
 {
-	private string $fixturesPath;
-
-	protected function setUp(): void
-	{
-		$this->fixturesPath = __DIR__ . '/../fixtures';
-	}
-
 	public function testSanitizeTextArray(): void
 	{
 		# Arrange

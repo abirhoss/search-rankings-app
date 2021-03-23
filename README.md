@@ -97,7 +97,7 @@ The adapter pattern was used for the following reasons:
 2. If sometime later, the CEO wants to search on another search engine (such as Bing), this pattern allows us to easily add new search engines without a big refactor
 
 
-3. Specifically here it allows a search engine class such as `GoogleApi` (Adaptee) to define its own interface for that specific search engine API, without having to worry about compatibility for any clients using it. A wrapper class `GoogleSearchClient` (Adapter)  wraps the search engine class and allows client objects to have a unified interface with interacting with search engine APIs
+3. Specifically here it allows a search engine class such as `GoogleApi` (Adaptee) to define its own interface for that specific search engine API, without having to worry about compatibility for any clients using it. A wrapper class `GoogleSearchClient` (Adapter)  wraps the search engine class and allows client objects to have a unified interface when interacting with search engine APIs
 
 ### Facade
 

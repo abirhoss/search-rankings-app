@@ -148,7 +148,7 @@ I would create a CI/CD pipeline using bitbucket pipelines that deploys the app t
 
 ### 5. IaC using Terraform
 
-I would write Terraform code to define all resources I want to provision. This would typically be a multi-account setup where each environment (qa, stg and prod) are deployed into separate AWS accounts
+I would write Terraform code to define all resources I want to provision. This would typically be a multi-account setup where each environment (qa, stg and prod) is deployed in its own separate AWS account to reduce its blast radius
 
 ### 6. Use a framework and environment variables
 

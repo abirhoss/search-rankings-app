@@ -26,7 +26,7 @@ class Sanitizer
 	{
 		$url = strtolower($url);
 
-		// Get the url with the 'https://' or 'http://' scheme
+		// Get the url without the 'https://' or 'http://' scheme
 		$parsedUrl = parse_url($url);
 		$urlWithoutScheme = isset($parsedUrl['host']) ? $parsedUrl['host'] : $parsedUrl['path'];
 

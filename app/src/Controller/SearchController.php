@@ -41,9 +41,9 @@ class SearchController extends AbstractController
 	 */
 	public function searchAction(array $searchFormInput, GoogleSearchClient $searchClient): string
 	{
-		// Sanitize search form input
-		$searchKeywords = Sanitizer::sanitizeText($searchFormInput['searchKeywords']);
-		$url = Sanitizer::sanitizeText($searchFormInput['url']);
+		// Get form input values
+		$searchKeywords = $searchFormInput['searchKeywords'];
+		$url = $searchFormInput['url'];
 		$omittedResults = isset($searchFormInput['omittedResults']) ? $searchFormInput['omittedResults'] : "No";
 
 		// Get the domain from the url

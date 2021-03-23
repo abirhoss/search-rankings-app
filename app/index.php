@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Helpers\Request\Http\CurlRequest;
 use App\Helpers\Request\Requests\RequestFactory;
 use App\Helpers\Response\Response;
+use App\Helpers\Sanitizer;
 use App\SearchClients\GoogleApi;
 use App\SearchClients\GoogleSearchClient;
 use App\SearchClients\SearchClientInterface;
@@ -43,9 +44,12 @@ $controller = getController($controllerName, $actionName);
 // Get search client
 $searchClient = getSearchClient('google');
 
+// Get sanitized $_POST input
+$sanitizedPostInput = Sanitizer::sanitizeTextArray($_POST);
+
 // Call the appropriate controller action. Inject search client into controller as a dependency.
 // The controller returns a rendered view template in HTML
-$viewTemplate = $controller->{$actionName}($_POST, $searchClient);
+$viewTemplate = $controller->{$actionName}($sanitizedPostInput, $searchClient);
 
 // Print HTML view template to user
 echo $viewTemplate;

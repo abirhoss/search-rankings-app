@@ -16,17 +16,24 @@ final class SanitizerTest extends TestCase
 		$this->fixturesPath = __DIR__ . '/../fixtures';
 	}
 
-	public function testSanitizeText(): void
+	public function testSanitizeTextArray(): void
 	{
 		# Arrange
-		$rawText = "<script\\x20type=\"text/javascript\">javascript:alert(1);</script>";
-		$expected = "javascript:alert(1);";
+		$badTextArray = [
+			'searchKeywords' => "<script\\x20type=\"text/javascript\">javascript:alert(1);</script>",
+			'url' => "\"><script>alert(123);</script x=\""
+		];
+
+		$expectedSanitizedArray = [
+			'searchKeywords' => 'javascript:alert(1);',
+			'url' => '&#34;>alert(123);',
+		];
 
 		# Act
-		$actual = Sanitizer::sanitizeText($rawText);
+		$actualTextArray = Sanitizer::sanitizeTextArray($badTextArray);
 
 		# Assert
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expectedSanitizedArray, $actualTextArray);
 	}
 
 	public function testGetDomainFromUrl(): void

@@ -8,12 +8,12 @@ namespace App\Helpers;
 class Sanitizer
 {
 	/**
-	 * @param string $text
-	 * @return string
+	 * @param array $textArray
+	 * @return ?array
 	 */
-	public static function sanitizeText(string $text): string
+	public static function sanitizeTextArray(array $textArray): ?array
 	{
-		return filter_var($text, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+		return filter_var_array($textArray, FILTER_SANITIZE_STRING);
 	}
 
 	/**
